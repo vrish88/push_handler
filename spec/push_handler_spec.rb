@@ -3,12 +3,27 @@ require 'push_handler'
 describe PushHandler do
 	include PushHandler
 	describe '.new_push' do
+		# repo info
+		let(:url)   { 'http://example.com/repo.git' }
+		let(:name)  { 'Just a test repo' }
+		let(:owner) { {'name' => 'Joe Schmoe', 'email' => 'schmoe@example.com'} }
+
 		let(:old_commit_hash) { 'aa453216d1b3e49e7f6f98441fa56946ddcd6a20' }
 		let(:new_commit_hash) { '68f7abf4e6f922807889f52bc043ecd31b79f814' }
 		let(:ref_name)        { 'refs/heads/master' }
 
+		let(:result) { PushHandler.new_push(old_commit_hash, new_commit_hash, ref_name) }
+
+		before :all do
+			PushHandler.configure do |config|
+				config.url = url
+				config.name = name
+				config.owner = owner
+			end
+		end
+
 		context 'should return a payload with the following' do
-			subject { PushHandler.new_push(old_commit_hash, new_commit_hash, ref_name) }
+			subject { result }
 			specify 'after should be the new commit hash' do
 				should include_hash('after' => new_commit_hash)
 			end
@@ -25,14 +40,25 @@ describe PushHandler do
 			# context 'deleted'
 			# context 'forced'
 
-			context 'repository should be loaded from a user specified config file' do
-				specify 'should load the repo name'
+			context 'repository info is specified in a config call' do
+				subject { result['repository'] }
 
-				specify 'should load the repo url'
+				specify 'should load the repo name' do
+					should include_hash('name' => name)
+				end
+
+				specify 'should load the repo url' do
+					should include_hash('url' => url)
+				end
 
 				context "the owner's" do
-					specify "name"
-					specify "email"
+					subject { result['repository']['owner']}
+					specify "name" do
+						should include_hash('name' => owner['name'])
+					end
+					specify "email" do
+						should include_hash('email' => owner['email'])
+					end
 				end
 			end
 
@@ -44,7 +70,7 @@ describe PushHandler do
 
 			context 'commits' do
 				context 'each commit should have the following info' do
-					subject { PushHandler.new_push(old_commit_hash, new_commit_hash, ref_name)['commits'] }
+					subject { result['commits'] }
 
 					it "should have distinct marked true (distinct to the branch? I'm not sure)"
 					context 'removed' do
