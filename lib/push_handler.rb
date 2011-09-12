@@ -1,5 +1,10 @@
+require 'rubygems'
 require 'grit'
-require 'git_push_handler/config'
+require 'json'
+require 'net/http'
+require 'uri'
+
+require File.expand_path(File.dirname(__FILE__) + '/git_push_handler/config')
 
 module PushHandler
 	extend self
@@ -7,12 +12,37 @@ module PushHandler
 
 	# this configure method implementation is taken
 	# from https://github.com/andrew/split/blob/master/lib/split.rb
-	def self.configure
+	def configure
 		self.config ||= Config.new
 		yield(self.config)
 	end
 
-	def self.construct_payload(old_commit, new_commit, ref_name)
+	def send_to_services(old_commit, new_commit, ref_name)
+		payload = construct_payload(old_commit, new_commit, ref_name)
+		config.services['data'].each_pair do |service, data|
+			puts Net::HTTP.post_form(
+				URI.parse(config.services['url'] + '/' + service + '/push'), 
+				{
+					'data' => data.to_json,
+					'payload' => payload.to_json
+				}
+			).body
+
+
+			# url = URI.parse(config.services['url'] + '/' + service + '/push')
+			# puts url.inspect
+			# req = Net::HTTP::Post.new(
+			# 	url.path,
+			# 	initheader = {'Content-Type' =>'application/json'}
+			# )
+			# req.body = post_body
+			# response = Net::HTTP.new(url.host, url.port).start {|http| http.request(req) }
+			# puts "Response #{response.code} #{response.message}:
+			# #{response.body}"
+		end
+	end
+
+	def construct_payload(old_commit, new_commit, ref_name)
 		hash_to_return = Hash.new({})
 		hash_to_return = {
 			'after' => new_commit,

@@ -22,6 +22,18 @@ describe PushHandler do
 		PushHandler.configure do |config|
 			config.repo = repo
 			config.commit_url = commit_url
+			config.services['url'] = 'http://localhost:8080'
+		end
+	end
+
+	describe '.send_to_services' do
+		it 'should'
+		context 'for each service configuration provided' do
+			it 'should send a request to that corresponding url' do
+				
+			end
+
+			it 'should send along the corresponding payload'
 		end
 	end
 
