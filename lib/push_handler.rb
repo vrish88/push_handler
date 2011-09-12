@@ -39,7 +39,22 @@ module PushHandler
 			hash_to_return['commits'] = commits.collect do |commit|
 				Hash.new.tap do |commit_hash|
 					commit_hash['distinct'] = true
+					commit_hash['message'] = commit.message
 
+					# accomodate the odd formatting they have in their timestamp
+					timestamp = commit.authored_date.gmtime.strftime('%FT%T%z')
+					commit_hash['timestamp'] = timestamp[0..-3] + ':' + timestamp[-2..-1]
+
+					# figure out what, if any files should be added to the 
+					# removed, added, or modified arrays
+					commit_hash['removed']  = []
+					commit_hash['added']    = []
+					commit_hash['modified'] = []
+					commit.diffs.each do |diff|
+						commit_hash['removed']  << diff.a_path if diff.deleted_file
+						commit_hash['added']    << diff.b_path if diff.new_file
+						commit_hash['modified'] << diff.a_path if !diff.new_file && !diff.deleted_file
+					end
 				end
 			end
 		end

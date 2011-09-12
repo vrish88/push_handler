@@ -83,19 +83,26 @@ describe PushHandler do
 						should include_hash('distinct' => true)
 					end
 					context 'removed' do
-						it "should return an empty array if no files were removed"
-						it "should return an array of file names if any were removed"
+						it "should return an array of file that were removed (if any)" do
+							should include_hash('removed' => [])
+						end
 					end
 					context 'added' do
-						it "should return an empty array if no files were added"
-						it "should return an array of file names if any were added"
+						it "should return an array of file that were added (if any)" do
+							should include_hash('added' => [])
+						end
 					end
 					context 'modified' do
-						it "should return an empty array if no files were modified"
-						it "should return an array of file names if any were modified"
+						it "should return an array of file that were modified (if any)" do
+							should include_hash('modified' => ['README'])
+						end
 					end
-					it "should have the commit message in 'message'"
-					it "should have the timestamp in 'timestamp'"
+					it "should have the commit message in 'message'" do
+						should include_hash('message' => 'add some more')
+					end
+					it "should have the timestamp in 'timestamp'" do
+						should include_hash('timestamp' => '2011-06-20T01:13:11-07:00')
+					end
 					it "should have the url in 'url'"
 					context 'author should be a hash with the keys' do
 						specify 'name'
