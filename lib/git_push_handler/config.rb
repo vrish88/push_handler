@@ -3,6 +3,7 @@ module PushHandler
 		attr_accessor :url
 		attr_accessor :name
 		attr_accessor :owner
+		attr_accessor :working_dir
 
 		def initialize
 			@url = ''

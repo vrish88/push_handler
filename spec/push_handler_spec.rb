@@ -7,18 +7,22 @@ describe PushHandler do
 		let(:url)   { 'http://example.com/repo.git' }
 		let(:name)  { 'Just a test repo' }
 		let(:owner) { {'name' => 'Joe Schmoe', 'email' => 'schmoe@example.com'} }
+		let(:working_dir) { File.expand_path(File.dirname(__FILE__) + '/example_git_repo/') }
 
-		let(:old_commit_hash) { 'aa453216d1b3e49e7f6f98441fa56946ddcd6a20' }
-		let(:new_commit_hash) { '68f7abf4e6f922807889f52bc043ecd31b79f814' }
+		let(:old_commit_hash) { '1afa4eba68c883738af4536f7e04d978964bb523' }
+		let(:new_commit_hash) { '4e1b47e950a2f5d6afa6744fa92f3fce5d606e1b' }
 		let(:ref_name)        { 'refs/heads/master' }
 
-		let(:result) { PushHandler.new_push(old_commit_hash, new_commit_hash, ref_name) }
+		let!(:result) do
+			PushHandler.new_push(old_commit_hash, new_commit_hash, ref_name)
+		end
 
 		before :all do
 			PushHandler.configure do |config|
 				config.url = url
 				config.name = name
 				config.owner = owner
+				config.working_dir = working_dir
 			end
 		end
 
@@ -63,16 +67,21 @@ describe PushHandler do
 			end
 
 			context 'pusher' do
-				it 'should be the author of the latest commit'
 
-				it 'should be the name of that author'
+				subject { result['pusher'] }
+
+				it 'should be the author of the latest commit' do
+					should include_hash('name' => 'Joe Schmoe')
+				end
 			end
 
 			context 'commits' do
 				context 'each commit should have the following info' do
-					subject { result['commits'] }
+					subject { result['commits'].first }
 
-					it "should have distinct marked true (distinct to the branch? I'm not sure)"
+					it "should have distinct marked true (distinct to the branch? I'm not sure)" do
+						should include_hash('distinct' => true)
+					end
 					context 'removed' do
 						it "should return an empty array if no files were removed"
 						it "should return an array of file names if any were removed"

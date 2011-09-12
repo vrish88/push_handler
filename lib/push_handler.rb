@@ -1,3 +1,4 @@
+require 'grit'
 require 'git_push_handler/config'
 
 module PushHandler
@@ -12,6 +13,7 @@ module PushHandler
 	end
 
 	def self.new_push(old_commit, new_commit, ref_name)
+		hash_to_return = Hash.new({})
 		hash_to_return = {
 			'after' => new_commit,
 			'before' => old_commit,
@@ -23,6 +25,24 @@ module PushHandler
 			'name' => config.name,
 			'owner' => config.owner
 		}
+		repo = Grit::Repo.new(config.working_dir)
+		commits = Grit::Commit.find_all(
+			repo,
+			"#{old_commit}..#{new_commit}",
+			:'no-merges' => true
+		).reverse
+
+		unless commits.empty?
+			hash_to_return['pusher'] = {
+				'name' => commits.first.author.name
+			}
+			hash_to_return['commits'] = commits.collect do |commit|
+				Hash.new.tap do |commit_hash|
+					commit_hash['distinct'] = true
+
+				end
+			end
+		end
 
 		hash_to_return
 	end
