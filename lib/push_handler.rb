@@ -12,7 +12,7 @@ module PushHandler
 		yield(self.config)
 	end
 
-	def self.new_push(old_commit, new_commit, ref_name)
+	def self.construct_payload(old_commit, new_commit, ref_name)
 		hash_to_return = Hash.new({})
 		hash_to_return = {
 			'after' => new_commit,
@@ -21,11 +21,11 @@ module PushHandler
 		}
 
 		hash_to_return['repository'] = {
-			'url' => config.url,
-			'name' => config.name,
-			'owner' => config.owner
+			'url' => config.repo['url'],
+			'name' => config.repo['name'],
+			'owner' => config.repo['owner']
 		}
-		repo = Grit::Repo.new(config.working_dir)
+		repo = Grit::Repo.new(config.repo['working_dir'])
 		commits = Grit::Commit.find_all(
 			repo,
 			"#{old_commit}..#{new_commit}",

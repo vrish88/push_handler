@@ -3,30 +3,32 @@ require 'push_handler'
 describe PushHandler do
 	include PushHandler
 
-	describe '.new_push' do
-		# repo info
-		let(:url)   { 'http://example.com/repo.git' }
-		let(:name)  { 'Just a test repo' }
-		let(:owner) { {'name' => 'Joe Schmoe', 'email' => 'schmoe@example.com'} }
-		let(:working_dir) { File.expand_path(File.dirname(__FILE__) + '/example_git_repo/') }
-		let(:commit_url)  { 'http://example.com/master/commit?id=%s'}
+	let(:repo)   { {
+		'url' => 'http://example.com/repo.git',
+		'name' => 'Just a test repo',
+		'owner' => {
+			'name' => 'Joe Schmoe', 
+			'email' => 'schmoe@example.com'
+		},
+		'working_dir' => File.expand_path(File.dirname(__FILE__) + '/example_git_repo/')
+	} }
+	let(:commit_url)      { 'http://example.com/master/commit?id=%s'}
 
-		let(:old_commit_hash) { '1afa4eba68c883738af4536f7e04d978964bb523' }
-		let(:new_commit_hash) { '4e1b47e950a2f5d6afa6744fa92f3fce5d606e1b' }
-		let(:ref_name)        { 'refs/heads/master' }
+	let(:old_commit_hash) { '1afa4eba68c883738af4536f7e04d978964bb523' }
+	let(:new_commit_hash) { '4e1b47e950a2f5d6afa6744fa92f3fce5d606e1b' }
+	let(:ref_name)        { 'refs/heads/master' }
 
-		let!(:result) do
-			PushHandler.new_push(old_commit_hash, new_commit_hash, ref_name)
+	before :all do
+		PushHandler.configure do |config|
+			config.repo = repo
+			config.commit_url = commit_url
 		end
+	end
 
-		before :all do
-			PushHandler.configure do |config|
-				config.url = url
-				config.name = name
-				config.owner = owner
-				config.working_dir = working_dir
-				config.commit_url = commit_url
-			end
+	describe '.construct_payload' do
+		# repo info
+		let!(:result) do
+			PushHandler.construct_payload(old_commit_hash, new_commit_hash, ref_name)
 		end
 
 		context 'should return a payload with the following' do
@@ -47,20 +49,20 @@ describe PushHandler do
 				subject { result['repository'] }
 
 				specify 'should load the repo name' do
-					should include_hash('name' => name)
+					should include_hash('name' => repo['name'])
 				end
 
 				specify 'should load the repo url' do
-					should include_hash('url' => url)
+					should include_hash('url' => repo['url'])
 				end
 
 				context "the owner's" do
 					subject { result['repository']['owner']}
 					specify "name" do
-						should include_hash('name' => owner['name'])
+						should include_hash('name' => repo['owner']['name'])
 					end
 					specify "email" do
-						should include_hash('email' => owner['email'])
+						should include_hash('email' => repo['owner']['email'])
 					end
 				end
 			end
