@@ -2,6 +2,7 @@ require 'push_handler'
 
 describe PushHandler do
 	include PushHandler
+
 	describe '.new_push' do
 		# repo info
 		let(:url)   { 'http://example.com/repo.git' }
@@ -41,10 +42,6 @@ describe PushHandler do
 			specify 'before should be the old commit hash' do
 				should include_hash('before' => old_commit_hash)
 			end
-
-			# context 'created'
-			# context 'deleted'
-			# context 'forced'
 
 			context 'repository info is specified in a config call' do
 				subject { result['repository'] }
@@ -127,20 +124,8 @@ describe PushHandler do
 end
 
 RSpec::Matchers.define :include_hash do |expected|
-
 	match do |actual|
 		expected.keys.all?{|key| actual.has_key?(key)} &&
-			actual.slice(*expected.keys) == expected
-	end
-
-end
-
-# port over Rails' Hash#slice method
-class Hash
-	def slice(*keys)
-		keys = keys.map! { |key| convert_key(key) } if respond_to?(:convert_key)
-		hash = self.class.new
-		keys.each { |k| hash[k] = self[k] if has_key?(k) }
-		hash
+		actual.fetch(expected.keys.first) == expected.values.first
 	end
 end
