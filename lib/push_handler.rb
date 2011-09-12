@@ -39,8 +39,13 @@ module PushHandler
 			hash_to_return['commits'] = commits.collect do |commit|
 				Hash.new.tap do |commit_hash|
 					commit_hash['distinct'] = true
+					commit_hash['id'] = commit.sha
 					commit_hash['message'] = commit.message
 					commit_hash['url'] = config.commit_url % commit.sha
+					commit_hash['author'] = {
+						'name'  => commit.author.name,
+						'email' => commit.author.email
+					}
 
 					# accomodate the odd formatting they have in their timestamp
 					timestamp = commit.authored_date.gmtime.strftime('%FT%T%z')

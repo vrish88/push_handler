@@ -109,10 +109,17 @@ describe PushHandler do
 						should include_hash('url' => 'http://example.com/master/commit?id=f7e495a93758c74589acc28f8bc0893e4c89e7e8')
 					end
 					context 'author should be a hash with the keys' do
-						specify 'name'
-						specify 'email'
+						subject { result['commits'].first['author'] }
+						specify 'name' do
+							should include_hash('name' => 'Joe Schmoe')
+						end
+						specify 'email' do
+							should include_hash('email' => 'schmoe@example.com')
+						end
 					end
-					it "should specify the commit id in 'id'"
+					it "should specify the commit id in 'id'" do
+						should include_hash('id' => 'f7e495a93758c74589acc28f8bc0893e4c89e7e8')
+					end
 				end
 			end
 		end
