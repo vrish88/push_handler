@@ -8,6 +8,7 @@ describe PushHandler do
 		let(:name)  { 'Just a test repo' }
 		let(:owner) { {'name' => 'Joe Schmoe', 'email' => 'schmoe@example.com'} }
 		let(:working_dir) { File.expand_path(File.dirname(__FILE__) + '/example_git_repo/') }
+		let(:commit_url)  { 'http://example.com/master/commit?id=%s'}
 
 		let(:old_commit_hash) { '1afa4eba68c883738af4536f7e04d978964bb523' }
 		let(:new_commit_hash) { '4e1b47e950a2f5d6afa6744fa92f3fce5d606e1b' }
@@ -23,6 +24,7 @@ describe PushHandler do
 				config.name = name
 				config.owner = owner
 				config.working_dir = working_dir
+				config.commit_url = commit_url
 			end
 		end
 
@@ -103,7 +105,9 @@ describe PushHandler do
 					it "should have the timestamp in 'timestamp'" do
 						should include_hash('timestamp' => '2011-06-20T01:13:11-07:00')
 					end
-					it "should have the url in 'url'"
+					it "should have the url in 'url'" do
+						should include_hash('url' => 'http://example.com/master/commit?id=f7e495a93758c74589acc28f8bc0893e4c89e7e8')
+					end
 					context 'author should be a hash with the keys' do
 						specify 'name'
 						specify 'email'
