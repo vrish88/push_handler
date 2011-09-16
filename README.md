@@ -60,6 +60,7 @@ Note
 ----
 
 To see the parameters that each service requires you'll have to:
+
 1. Go to the `github-services/` directory
 2. Execute `rake services:config`
 3. Open `config/services.json` and look up the requirements
