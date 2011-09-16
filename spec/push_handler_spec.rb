@@ -27,11 +27,8 @@ describe PushHandler do
 	end
 
 	describe '.send_to_services' do
-		it 'should'
 		context 'for each service configuration provided' do
-			it 'should send a request to that corresponding url' do
-				
-			end
+			it 'should send a request to that corresponding url'
 
 			it 'should send along the corresponding payload'
 		end
