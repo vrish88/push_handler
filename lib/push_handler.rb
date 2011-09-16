@@ -4,7 +4,7 @@ require 'json'
 require 'net/http'
 require 'uri'
 
-require File.expand_path(File.dirname(__FILE__) + '/git_push_handler/config')
+require File.expand_path(File.dirname(__FILE__) + '/push_handler/config')
 
 module PushHandler
 	extend self
