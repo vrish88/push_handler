@@ -27,18 +27,6 @@ module PushHandler
 					'payload' => payload.to_json
 				}
 			).body
-
-
-			# url = URI.parse(config.services['url'] + '/' + service + '/push')
-			# puts url.inspect
-			# req = Net::HTTP::Post.new(
-			# 	url.path,
-			# 	initheader = {'Content-Type' =>'application/json'}
-			# )
-			# req.body = post_body
-			# response = Net::HTTP.new(url.host, url.port).start {|http| http.request(req) }
-			# puts "Response #{response.code} #{response.message}:
-			# #{response.body}"
 		end
 	end
 
