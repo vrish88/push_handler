@@ -10,7 +10,7 @@ Jeweler::Tasks.new do |gem|
   gem.homepage = "http://github.com/vrish88/push_handler"
   gem.license = "MIT"
   gem.summary = %Q{Format push data in a format that Github services understands.}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.description = %Q{This gem is for integreting a privately hosted repository with the open source Github services project.}
   gem.email = "michael.lavrisha@gmail.com"
   gem.authors = ["Michael Lavrisha"]
 
