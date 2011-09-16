@@ -11,49 +11,50 @@ Config
 4. In `.git/hooks/` directory of your repository, create a file called `post-receive`.
 5. Add the following text to `post-receive`, filling in your information:
 
-    #!/usr/bin/ruby
-    require 'rubygems'
-    require 'push_handler'
+```ruby
+#!/usr/bin/ruby
+require 'rubygems'
+require 'push_handler'
 
-    # Through STDIN git passes us: <oldrev> <newrev> <refname>
-    args = STDIN.readlines.first.split(/\s+/)
+# Through STDIN git passes us: <oldrev> <newrev> <refname>
+args = STDIN.readlines.first.split(/\s+/)
 
-    PushHandler.configure do |config|
-      config.repo = {
-        # Where to see the repository on the web
-        'url' => 'http://git.example.com',
+PushHandler.configure do |config|
+  config.repo = {
+    # Where to see the repository on the web
+    'url' => 'http://git.example.com',
 
-        # Repository name
-        'name' => 'Suppa Time',
+    # Repository name
+    'name' => 'Suppa Time',
 
-        # Directory on the machine where the contents of your .git folder lives
-        'working_dir' => '/mnt/suppa_time.git/',
+    # Directory on the machine where the contents of your .git folder lives
+    'working_dir' => '/mnt/suppa_time.git/',
 
-        # Repository owner contact info
-        'owner' => {
-          'name' => 'Big Boss Man',
-          'email' => 'bbm@example.com'
-        }
-      }
+    # Repository owner contact info
+    'owner' => {
+      'name' => 'Big Boss Man',
+      'email' => 'bbm@example.com'
+    }
+  }
 
-      # This is the link to the commit. Put the wildcard '%s' where the commit sha should go.
-      config.commit_url = 'http://git.example.com/commits?id=%s'
+  # This is the link to the commit. Put the wildcard '%s' where the commit sha should go.
+  config.commit_url = 'http://git.example.com/commits?id=%s'
 
-      # The url that the github-services server is running.
-      config.services['url'] = 'http://localhost:8080'
+  # The url that the github-services server is running.
+  config.services['url'] = 'http://localhost:8080'
 
-      # This is your configuration for 3rd parties.
-      config.services['data'] = {
-        'hipchat' => {
-          'auth_token' => '9082afake90210',
-          'room' => 12345,
-          'notify' => true
-        }
-      }
-    end
+  # This is your configuration for 3rd parties.
+  config.services['data'] = {
+    'hipchat' => {
+      'auth_token' => '9082afake90210',
+      'room' => 12345,
+      'notify' => true
+    }
+  }
+end
 
-    PushHandler.send_to_services(*args)
-
+PushHandler.send_to_services(*args)
+```
 
 Note
 ----
