@@ -14,7 +14,7 @@ describe PushHandler do
 		'is_bare' => false
 	} }
 	let(:urls)      { {
-		'branch' => 'http://example.com/master/branch?id=%s',
+		'branch' => 'http://example.com/%s',
 		'commit' => 'http://example.com/master/commit?id=%s'
 	} }
 
@@ -53,6 +53,11 @@ describe PushHandler do
 
 			specify 'ref should be the ref name' do
 				should include_hash('ref' => ref_name)
+			end
+
+			# NOT IN THE GITHUB SPECIFICATION
+			specify 'branch_url should have the branch name put into the url["branch"] string' do
+				should include_hash('branch_url' => urls['branch'] % 'master')
 			end
 
 			specify 'before should be the old commit hash' do

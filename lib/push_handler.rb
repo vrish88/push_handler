@@ -35,7 +35,8 @@ module PushHandler
 		hash_to_return = {
 			'after' => new_commit,
 			'before' => old_commit,
-			'ref' => ref_name
+			'ref' => ref_name,
+			'branch_url' => config.urls['branch'] % ref_name[/\/([^\/]+)$/, 1]
 		}
 
 		hash_to_return['repository'] = {
