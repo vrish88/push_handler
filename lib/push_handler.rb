@@ -59,7 +59,7 @@ module PushHandler
 					commit_hash['distinct'] = true
 					commit_hash['id'] = commit.sha
 					commit_hash['message'] = commit.message
-					commit_hash['url'] = config.commit_url % commit.sha
+					commit_hash['url'] = (config.urls['commit'] || config.commit_url) % commit.sha
 					commit_hash['author'] = {
 						'name'  => commit.author.name,
 						'email' => commit.author.email

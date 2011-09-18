@@ -40,8 +40,9 @@ PushHandler.configure do |config|
     }
   }
 
-  # This is the link to the commit. Put the wildcard '%s' where the commit sha should go.
-  config.commit_url = 'http://git.example.com/commits?id=%s'
+  # Links to objects in your repository. Put the wildcard '%s' where the reference should go.
+  config.urls['commit'] = 'http://git.example.com/commits?id=%s'    # '%s' will be replaced with the commit sha
+  config.urls['branch'] = 'http://git.example.com/branches?id=%s'   # '%s' will be the branch name
 
   # The url that the github-services server is running.
   config.services['url'] = 'http://localhost:8080'

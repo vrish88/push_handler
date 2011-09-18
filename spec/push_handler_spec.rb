@@ -13,7 +13,10 @@ describe PushHandler do
 		'working_dir' => File.expand_path(File.dirname(__FILE__) + '/example_git_repo/'),
 		'is_bare' => false
 	} }
-	let(:commit_url)      { 'http://example.com/master/commit?id=%s'}
+	let(:urls)      { {
+		'branch' => 'http://example.com/master/branch?id=%s',
+		'commit' => 'http://example.com/master/commit?id=%s'
+	} }
 
 	let(:old_commit_hash) { '1afa4eba68c883738af4536f7e04d978964bb523' }
 	let(:new_commit_hash) { '4e1b47e950a2f5d6afa6744fa92f3fce5d606e1b' }
@@ -22,7 +25,8 @@ describe PushHandler do
 	before :all do
 		PushHandler.configure do |config|
 			config.repo = repo
-			config.commit_url = commit_url
+			config.urls['commit'] = urls['commit']
+			config.urls['branch'] = urls['branch']
 			config.services['url'] = 'http://localhost:8080'
 		end
 	end
