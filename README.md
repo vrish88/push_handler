@@ -30,6 +30,9 @@ PushHandler.configure do |config|
     # Directory on the machine where the contents of your .git folder lives
     'working_dir' => '/mnt/suppa_time.git/',
 
+    # True if 'working_dir' is pointing to a bare repository
+    'is_bare' => true,
+
     # Repository owner contact info
     'owner' => {
       'name' => 'Big Boss Man',

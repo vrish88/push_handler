@@ -43,7 +43,7 @@ module PushHandler
 			'name' => config.repo['name'],
 			'owner' => config.repo['owner']
 		}
-		repo = Grit::Repo.new(config.repo['working_dir'])
+		repo = Grit::Repo.new(config.repo['working_dir'], :is_bare => config.repo['is_bare'])
 		commits = Grit::Commit.find_all(
 			repo,
 			"#{old_commit}..#{new_commit}",

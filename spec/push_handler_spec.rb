@@ -10,7 +10,8 @@ describe PushHandler do
 			'name' => 'Joe Schmoe', 
 			'email' => 'schmoe@example.com'
 		},
-		'working_dir' => File.expand_path(File.dirname(__FILE__) + '/example_git_repo/')
+		'working_dir' => File.expand_path(File.dirname(__FILE__) + '/example_git_repo/'),
+		'is_bare' => false
 	} }
 	let(:commit_url)      { 'http://example.com/master/commit?id=%s'}
 
