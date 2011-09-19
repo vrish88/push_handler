@@ -2,6 +2,7 @@ source :rubygems
 
 gem 'json'
 gem 'grit'
+gem 'typhoeus'
 
 group :development do
   gem 'jeweler'

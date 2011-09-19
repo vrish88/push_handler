@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'grit'
 require 'json'
+require 'typhoeus'
 require 'net/http'
 require 'uri'
 
@@ -19,15 +20,19 @@ module PushHandler
 
 	def send_to_services(old_commit, new_commit, ref_name)
 		payload = construct_payload(old_commit, new_commit, ref_name)
+		hydra = Typhoeus::Hydra.new
 		config.services['data'].each_pair do |service, data|
-			puts Net::HTTP.post_form(
-				URI.parse(config.services['url'] + '/' + service + '/push'), 
-				{
+			hydra.queue Typhoeus::Request.new(
+				config.services['url'] + '/' + service + '/push',
+				:method => :post,
+				:params => {
 					'data' => data.to_json,
 					'payload' => payload.to_json
-				}
-			).body
+				},
+				:disable_ssl_peer_verification => true
+			)
 		end
+		hydra.run
 	end
 
 	def construct_payload(old_commit, new_commit, ref_name)
