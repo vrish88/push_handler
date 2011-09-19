@@ -1,7 +1,6 @@
 source :rubygems
 
 gem 'json'
-gem 'bundler'
 gem 'grit'
 gem 'typhoeus'
 
