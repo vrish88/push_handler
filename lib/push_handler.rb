@@ -20,9 +20,8 @@ module PushHandler
 
 	def send_to_services(old_commit, new_commit, ref_name)
 		payload = construct_payload(old_commit, new_commit, ref_name)
-		hydra = Typhoeus::Hydra.new
 		config.services['data'].each_pair do |service, data|
-			hydra.queue Typhoeus::Request.new(
+			Typhoeus::Request.post(
 				config.services['url'] + '/' + service + '/push',
 				:method => :post,
 				:params => {
@@ -32,7 +31,6 @@ module PushHandler
 				:disable_ssl_peer_verification => true
 			)
 		end
-		hydra.run
 	end
 
 	def construct_payload(old_commit, new_commit, ref_name)
